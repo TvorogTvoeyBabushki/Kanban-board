@@ -1,0 +1,22 @@
+@import './reset';
+@import './variables';
+
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+}
+
+body {
+	font: 400 normal 1.125rem/1.2 $default-font;
+	color: $black;
+	background-color: $main-block;
+	overflow: hidden;
+}
+
+.container {
+	width: 100%;
+	max-width: 1235px;
+	margin: 0 auto;
+	padding: 0 16px 0 19px;
+}
