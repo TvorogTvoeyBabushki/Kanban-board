@@ -1,0 +1,43 @@
+@import '/src/assets/styles/variables';
+@import '/src/assets/styles/mixins';
+
+.btn {
+	@include transition(color);
+
+	display: flex;
+	align-items: center;
+	color: $gray;
+
+	&:hover {
+		color: $black;
+	}
+
+	&:disabled {
+		color: $gray;
+		cursor: default;
+	}
+
+	> span {
+		margin-bottom: 4px;
+		margin-right: 5px;
+		font-size: 1.6rem;
+	}
+
+	&.submit {
+		@include transition(all);
+
+		padding: 5px 10px;
+		background-color: $white;
+		border-radius: 10px;
+
+		&:hover {
+			background-color: $main-block;
+			color: $white;
+		}
+
+		&:disabled {
+			background-color: $white;
+			color: $gray;
+		}
+	}
+}

@@ -1,51 +1,58 @@
-import { FunctionComponent, useEffect, useState } from 'react'
+import { Fragment, FunctionComponent, useEffect, useState } from 'react'
+
+import { IDataTasks } from '@/components/screens/home/Home'
 
 import styles from './CardTask.module.scss'
+import Button from '../button/Button'
+import Field from '../field/Field'
 
 interface ICardTaskProps {
+	dataTasks: IDataTasks[]
+	setDataTasks: React.Dispatch<React.SetStateAction<IDataTasks[]>>
 	title: string
 	variant: string
 }
 
-interface IDataTasks {
-	id?: number
-	title: string
-	description?: string
-}
-
-const CardTask: FunctionComponent<ICardTaskProps> = ({ title, variant }) => {
-	const [dataBacklogTasks, setDataBacklogTasks] = useState<IDataTasks[]>([])
+const CardTask: FunctionComponent<ICardTaskProps> = ({
+	dataTasks,
+	setDataTasks,
+	title,
+	variant
+}) => {
 	const [isBacklog, setIsBacklog] = useState<boolean>(false)
 	const [fieldValue, setFieldValue] = useState<string>('')
 
-	useEffect(() => {
-		if (localStorage.getItem(variant)) {
-			setDataBacklogTasks(JSON.parse(localStorage.getItem(variant) as string))
-		}
-	}, [])
+	const handleClickShowFieldAndSelectTask = () => {
+		setIsBacklog(true)
+	}
 
-	const handleClickShowFieldTask = () => {
-		if (variant === 'backlog') {
-			setIsBacklog(true)
-		}
+	const handleCancelClick = (
+		e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+	) => {
+		e.stopPropagation()
+
+		setIsBacklog(false)
+		setFieldValue('')
 	}
 
 	const handleChangeInput = (e: React.FormEvent<HTMLInputElement>) => {
-		const targetEl = e.target as HTMLInputElement
-
-		setFieldValue(targetEl.value)
+		setFieldValue((e.target as HTMLInputElement).value)
 	}
 
 	const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault()
 
-		const targetEl = e.target as HTMLFormElement
-		const formData = new FormData(targetEl)
+		const formData = new FormData(e.target as HTMLFormElement)
+		const id = dataTasks.length + 1
 
-		// variant === 'backlog' &&
-		setDataBacklogTasks(prev => [
+		setDataTasks(prev => [
 			...prev,
-			Object.fromEntries(formData) as { title: string }
+			{
+				block: variant,
+				id,
+				...(Object.fromEntries(formData) as { title: string }),
+				description: 'This task has no description'
+			}
 		])
 
 		setIsBacklog(false)
@@ -53,18 +60,19 @@ const CardTask: FunctionComponent<ICardTaskProps> = ({ title, variant }) => {
 	}
 
 	useEffect(() => {
-		dataBacklogTasks.length &&
-			localStorage.setItem(variant, JSON.stringify(dataBacklogTasks))
-	}, [dataBacklogTasks])
+		dataTasks.length && localStorage.setItem('tasks', JSON.stringify(dataTasks))
+	}, [dataTasks])
 
 	return (
 		<div className={styles.card_task}>
 			<h3>{title}</h3>
 
-			{dataBacklogTasks.length ? (
+			{dataTasks.filter(data => data.block === variant).length ? (
 				<div>
-					{dataBacklogTasks.map((task, index) => (
-						<div key={index}>{task.title}</div>
+					{dataTasks.map(data => (
+						<Fragment key={data.id}>
+							{data.block === variant && <div>{data.title}</div>}
+						</Fragment>
 					))}
 				</div>
 			) : (
@@ -73,24 +81,60 @@ const CardTask: FunctionComponent<ICardTaskProps> = ({ title, variant }) => {
 
 			{isBacklog && (
 				<form onSubmit={handleSubmit}>
-					<input
-						type='text'
-						name='title'
-						value={fieldValue}
-						onInput={handleChangeInput}
-					/>
+					{variant === 'backlog' ? (
+						<Field
+							type='text'
+							name='title'
+							value={fieldValue}
+							onInput={handleChangeInput}
+						/>
+					) : (
+						<select name='title'>
+							{dataTasks.map(data => (
+								<option key={data.id}>
+									{data.block === 'backlog' && variant === 'ready'
+										? data.title
+										: data.block === 'ready' && variant === 'progress'
+										? data.title
+										: data.block === 'progress' && variant === 'finished'
+										? data.title
+										: ''}
+								</option>
+							))}
+						</select>
+					)}
 
-					<button disabled={fieldValue.length ? false : true}>
-						<span>+</span>
-						{fieldValue.length ? 'Submit' : 'Add card'}
-					</button>
+					<div>
+						<Button
+							children={fieldValue.length ? 'Submit' : 'Add card'}
+							disabled={fieldValue.length ? false : true}
+							variant='submit'
+						/>
+						<Button
+							children='Cancel'
+							variant='cancel'
+							onClick={handleCancelClick}
+						/>
+					</div>
 				</form>
 			)}
 
 			{!isBacklog && (
-				<button onClick={handleClickShowFieldTask}>
-					<span>+</span>Add card
-				</button>
+				<Button
+					children='Add card'
+					disabled={
+						variant === 'backlog' ||
+						(variant === 'ready' &&
+							dataTasks.filter(data => data.block === 'backlog').length) ||
+						(variant === 'progress' &&
+							dataTasks.filter(data => data.block === 'ready').length) ||
+						(variant === 'finished' &&
+							dataTasks.filter(data => data.block === 'progress').length)
+							? false
+							: true
+					}
+					onClick={handleClickShowFieldAndSelectTask}
+				/>
 			)}
 		</div>
 	)
