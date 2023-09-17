@@ -1,7 +1,9 @@
-import { Fragment, FunctionComponent, useEffect, useState } from 'react'
+import { Fragment, FunctionComponent } from 'react'
+import { IoMdClose } from 'react-icons/io'
 
 import { IDataTasks } from '@/components/screens/home/Home'
 
+import { useCardTask } from './useCardTask'
 import styles from './CardTask.module.scss'
 import Button from '../button/Button'
 import Field from '../field/Field'
@@ -19,49 +21,19 @@ const CardTask: FunctionComponent<ICardTaskProps> = ({
 	title,
 	variant
 }) => {
-	const [isBacklog, setIsBacklog] = useState<boolean>(false)
-	const [fieldValue, setFieldValue] = useState<string>('')
+	const {
+		fieldValue,
+		handle: {
+			handleCancelClick,
+			handleChangeInput,
+			handleClickShowFieldAndSelectTask,
+			handleDeleteTask,
+			handleSubmit
+		},
+		isNewTask
+	} = useCardTask(dataTasks, setDataTasks, variant)
 
-	const handleClickShowFieldAndSelectTask = () => {
-		setIsBacklog(true)
-	}
-
-	const handleCancelClick = (
-		e: React.MouseEvent<HTMLButtonElement, MouseEvent>
-	) => {
-		e.stopPropagation()
-
-		setIsBacklog(false)
-		setFieldValue('')
-	}
-
-	const handleChangeInput = (e: React.FormEvent<HTMLInputElement>) => {
-		setFieldValue((e.target as HTMLInputElement).value)
-	}
-
-	const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-		e.preventDefault()
-
-		const formData = new FormData(e.target as HTMLFormElement)
-		const id = dataTasks.length + 1
-
-		setDataTasks(prev => [
-			...prev,
-			{
-				block: variant,
-				id,
-				...(Object.fromEntries(formData) as { title: string }),
-				description: 'This task has no description'
-			}
-		])
-
-		setIsBacklog(false)
-		setFieldValue('')
-	}
-
-	useEffect(() => {
-		dataTasks.length && localStorage.setItem('tasks', JSON.stringify(dataTasks))
-	}, [dataTasks])
+	// разбить еще это компонент и попробовать добавлять задачи в конец массива чтобы они шли последовательно так как мы их добавляем
 
 	return (
 		<div className={styles.card_task}>
@@ -71,7 +43,14 @@ const CardTask: FunctionComponent<ICardTaskProps> = ({
 				<div>
 					{dataTasks.map(data => (
 						<Fragment key={data.id}>
-							{data.block === variant && <div>{data.title}</div>}
+							{data.block === variant && (
+								<div>
+									{data.title}
+									<button onClick={() => handleDeleteTask(data)}>
+										<IoMdClose />
+									</button>
+								</div>
+							)}
 						</Fragment>
 					))}
 				</div>
@@ -79,7 +58,7 @@ const CardTask: FunctionComponent<ICardTaskProps> = ({
 				''
 			)}
 
-			{isBacklog && (
+			{isNewTask && (
 				<form onSubmit={handleSubmit}>
 					{variant === 'backlog' ? (
 						<Field
@@ -91,15 +70,15 @@ const CardTask: FunctionComponent<ICardTaskProps> = ({
 					) : (
 						<select name='title'>
 							{dataTasks.map(data => (
-								<option key={data.id}>
-									{data.block === 'backlog' && variant === 'ready'
-										? data.title
-										: data.block === 'ready' && variant === 'progress'
-										? data.title
-										: data.block === 'progress' && variant === 'finished'
-										? data.title
-										: ''}
-								</option>
+								<Fragment key={data.id}>
+									{(data.block === 'backlog' && variant === 'ready') ||
+									(data.block === 'ready' && variant === 'progress') ||
+									(data.block === 'progress' && variant === 'finished') ? (
+										<option>{data.title}</option>
+									) : (
+										''
+									)}
+								</Fragment>
 							))}
 						</select>
 					)}
@@ -107,7 +86,9 @@ const CardTask: FunctionComponent<ICardTaskProps> = ({
 					<div>
 						<Button
 							children={fieldValue.length ? 'Submit' : 'Add card'}
-							disabled={fieldValue.length ? false : true}
+							disabled={
+								fieldValue.length || variant !== 'backlog' ? false : true
+							}
 							variant='submit'
 						/>
 						<Button
@@ -119,7 +100,7 @@ const CardTask: FunctionComponent<ICardTaskProps> = ({
 				</form>
 			)}
 
-			{!isBacklog && (
+			{!isNewTask && (
 				<Button
 					children='Add card'
 					disabled={

@@ -8,6 +8,8 @@
 	width: 100%;
 	max-width: 282px;
 	padding: 12px;
+	max-height: 700px;
+	overflow: auto;
 
 	background-color: $task-block;
 	border-radius: 10px;
@@ -18,9 +20,28 @@
 		gap: 15px 0;
 
 		> div {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
 			padding: 10px;
 			background-color: $white;
 			border-radius: 5px;
+
+			&:hover > button {
+				display: block;
+			}
+
+			> button {
+				@include transition(opacity);
+
+				display: none;
+				height: 18px;
+				font-size: 1.3rem;
+
+				&:hover {
+					opacity: 0.7;
+				}
+			}
 		}
 	}
 
