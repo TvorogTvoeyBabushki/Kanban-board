@@ -1,5 +1,6 @@
 import { Fragment, FunctionComponent } from 'react'
 import { IoMdClose } from 'react-icons/io'
+import { motion } from 'framer-motion'
 
 import { IDataTasks } from '@/components/screens/home/Home'
 
@@ -7,6 +8,7 @@ import CardTaskForm from './form/CardTaskForm'
 import { useCardTask } from './useCardTask'
 import styles from './CardTask.module.scss'
 import Button from '../button/Button'
+import { animationCardTask } from './animationCardTask'
 
 interface ICardTaskProps {
 	dataTasks: IDataTasks[]
@@ -34,27 +36,31 @@ const CardTask: FunctionComponent<ICardTaskProps> = ({
 		isDuplicateTask
 	} = useCardTask(dataTasks, variant, setDataTasks)
 
-	//попробовать добавлять задачи в конец массива чтобы они шли последовательно так как мы их добавляем, добавить анимацию и решить проблему с дубликатом тасков
+	//попробовать добавлять задачи в конец массива чтобы они шли последовательно так как мы их добавляем и посмотреть фикс выпадающего списка
 
 	return (
 		<div className={styles.card_task}>
 			<h3>{title}</h3>
 
 			{dataTasks.filter(data => data.block === variant).length ? (
-				<div>
+				<motion.div
+					variants={animationCardTask.container}
+					initial='hidden'
+					animate='visible'
+				>
 					{dataTasks.map(data => (
 						<Fragment key={data.id}>
 							{data.block === variant && (
-								<div>
+								<motion.div variants={animationCardTask.item}>
 									{data.title}
 									<button onClick={() => handleDeleteTask(data)}>
 										<IoMdClose />
 									</button>
-								</div>
+								</motion.div>
 							)}
 						</Fragment>
 					))}
-				</div>
+				</motion.div>
 			) : (
 				''
 			)}

@@ -26,7 +26,6 @@
 			padding: 10px;
 			background-color: $white;
 			border-radius: 5px;
-			animation: opacity 1s ease-in-out;
 
 			&:hover > button {
 				display: block;
@@ -44,15 +43,5 @@
 				}
 			}
 		}
-	}
-}
-
-@keyframes opacity {
-	from {
-		opacity: 0;
-	}
-
-	to {
-		opacity: 1;
 	}
 }

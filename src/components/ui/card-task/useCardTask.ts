@@ -26,9 +26,13 @@ export const useCardTask = (
 	}
 
 	const handleDeleteTask = (data: IDataTasks) => {
-		const deleteDataTasks = dataTasks.filter(
+		const dataTaskLS = JSON.parse(
+			localStorage.getItem('tasks') as string
+		) as IDataTasks[]
+		const deleteDataTasks = dataTaskLS.filter(
 			deleteData => deleteData.id !== data.id && deleteData.title !== data.title
 		)
+
 		setDataTasks(deleteDataTasks)
 		setIsSubmitForm(true)
 	}
@@ -43,7 +47,10 @@ export const useCardTask = (
 		const formData = new FormData(e.target as HTMLFormElement)
 		const id = dataTasks.length + 1
 
-		if (dataTasks.filter(data => data.title === formData.get('title')).length) {
+		if (
+			dataTasks.filter(data => data.title === formData.get('title')).length &&
+			variant === 'backlog'
+		) {
 			setISDuplicateTask(true)
 
 			return
