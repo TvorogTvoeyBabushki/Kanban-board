@@ -1,0 +1,39 @@
+@import '/src/assets/styles/variables';
+
+.card_task_from {
+	> input {
+		width: 100%;
+		margin-bottom: 15px;
+		padding: 7px 9px;
+		border-radius: 5px;
+	}
+
+	> select {
+		width: 100%;
+		padding: 10px;
+		margin-bottom: 15px;
+
+		background-color: white;
+		border-radius: 5px;
+		cursor: pointer;
+		appearance: none;
+
+		&:not([multiple]) {
+			background-repeat: no-repeat;
+			background-position: calc(100% - 5px);
+			background-size: 1.2rem;
+			background-image: url('/public/arrow-black.svg');
+		}
+	}
+
+	> div {
+		display: flex;
+		justify-content: space-between;
+		flex-wrap: wrap;
+
+		> div {
+			margin-bottom: 10px;
+			color: $validation;
+		}
+	}
+}

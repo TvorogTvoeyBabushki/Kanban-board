@@ -4,12 +4,13 @@ import { IDataTasks } from '@/components/screens/home/Home'
 
 export const useCardTask = (
 	dataTasks: IDataTasks[],
-	setDataTasks: React.Dispatch<React.SetStateAction<IDataTasks[]>>,
-	variant: string
+	variant: string,
+	setDataTasks: React.Dispatch<React.SetStateAction<IDataTasks[]>>
 ) => {
 	const [fieldValue, setFieldValue] = useState<string>('')
 	const [isNewTask, setIsNewTask] = useState<boolean>(false)
 	const [isSubmitForm, setIsSubmitForm] = useState<boolean>(false)
+	const [isDuplicateTask, setISDuplicateTask] = useState<boolean>(false)
 
 	const handleClickShowFieldAndSelectTask = () => {
 		setIsNewTask(true)
@@ -41,6 +42,12 @@ export const useCardTask = (
 
 		const formData = new FormData(e.target as HTMLFormElement)
 		const id = dataTasks.length + 1
+
+		if (dataTasks.filter(data => data.title === formData.get('title')).length) {
+			setISDuplicateTask(true)
+
+			return
+		}
 
 		if (variant === 'backlog') {
 			setDataTasks(prev => [
@@ -75,10 +82,13 @@ export const useCardTask = (
 
 	useEffect(() => {
 		isSubmitForm && localStorage.setItem('tasks', JSON.stringify(dataTasks))
-		console.log('ad')
 
 		return () => setIsSubmitForm(false)
 	}, [isSubmitForm])
+
+	useEffect(() => {
+		setISDuplicateTask(false)
+	}, [fieldValue])
 
 	return useMemo(
 		() => ({
@@ -90,8 +100,9 @@ export const useCardTask = (
 				handleDeleteTask,
 				handleChangeInput,
 				handleSubmit
-			}
+			},
+			isDuplicateTask
 		}),
-		[fieldValue, isNewTask]
+		[fieldValue, isNewTask, isDuplicateTask]
 	)
 }
