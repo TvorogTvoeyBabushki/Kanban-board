@@ -35,7 +35,7 @@ const CardTaskForm: FunctionComponent<ICardTaskFormProps> = ({
 				<Field
 					type='text'
 					name='title'
-					value={fieldValue}
+					// value={fieldValue}
 					onInput={handleChangeInput}
 				/>
 			) : (

@@ -11,6 +11,9 @@ export const useCardTask = (
 	const [isNewTask, setIsNewTask] = useState<boolean>(false)
 	const [isSubmitForm, setIsSubmitForm] = useState<boolean>(false)
 	const [isDuplicateTask, setISDuplicateTask] = useState<boolean>(false)
+	const dataTaskLS = localStorage.getItem('tasks')
+		? (JSON.parse(localStorage.getItem('tasks') as string) as IDataTasks[])
+		: []
 
 	const handleClickShowFieldAndSelectTask = () => {
 		setIsNewTask(true)
@@ -26,9 +29,6 @@ export const useCardTask = (
 	}
 
 	const handleDeleteTask = (data: IDataTasks) => {
-		const dataTaskLS = JSON.parse(
-			localStorage.getItem('tasks') as string
-		) as IDataTasks[]
 		const deleteDataTasks = dataTaskLS.filter(
 			deleteData => deleteData.id !== data.id && deleteData.title !== data.title
 		)
@@ -45,10 +45,14 @@ export const useCardTask = (
 		e.preventDefault()
 
 		const formData = new FormData(e.target as HTMLFormElement)
-		const id = dataTasks.length + 1
+		const id = !dataTasks.length
+			? 0
+			: dataTasks[dataTasks.sort((a, b) => a.id - b.id).length - 1].id + 1
 
 		if (
-			dataTasks.filter(data => data.title === formData.get('title')).length &&
+			dataTasks.filter(
+				data => data.title === (formData.get('title') as string).trim()
+			).length &&
 			variant === 'backlog'
 		) {
 			setISDuplicateTask(true)
@@ -57,29 +61,29 @@ export const useCardTask = (
 		}
 
 		if (variant === 'backlog') {
-			setDataTasks(prev => [
-				...prev,
+			setDataTasks([
+				...dataTaskLS,
 				{
 					block: variant,
 					id,
-					...(Object.fromEntries(formData) as { title: string }),
+					title: (formData.get('title') as string).trim(),
 					description: 'This task has no description'
 				}
 			])
 		} else {
-			const newDataTasks = dataTasks.map(data => {
-				if (
+			const selectedTask = dataTasks.filter(
+				data =>
 					data.title === formData.get('title') &&
 					((data.block === 'backlog' && variant === 'ready') ||
 						(data.block === 'ready' && variant === 'progress') ||
 						(data.block === 'progress' && variant === 'finished'))
-				) {
-					data.block = variant
-				}
+			)
 
-				return data
-			})
-			setDataTasks(newDataTasks)
+			selectedTask.forEach(data => (data.block = variant))
+			setDataTasks(prev => [
+				...prev.filter(data => data.id !== selectedTask[0].id),
+				selectedTask[0]
+			])
 		}
 
 		setIsNewTask(false)

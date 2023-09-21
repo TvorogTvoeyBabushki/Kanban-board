@@ -36,8 +36,6 @@ const CardTask: FunctionComponent<ICardTaskProps> = ({
 		isDuplicateTask
 	} = useCardTask(dataTasks, variant, setDataTasks)
 
-	//попробовать добавлять задачи в конец массива чтобы они шли последовательно так как мы их добавляем и посмотреть фикс выпадающего списка
-
 	return (
 		<div className={styles.card_task}>
 			<h3>{title}</h3>
