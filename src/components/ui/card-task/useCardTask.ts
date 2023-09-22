@@ -11,9 +11,14 @@ export const useCardTask = (
 	const [isNewTask, setIsNewTask] = useState<boolean>(false)
 	const [isSubmitForm, setIsSubmitForm] = useState<boolean>(false)
 	const [isDuplicateTask, setISDuplicateTask] = useState<boolean>(false)
-	const dataTaskLS = localStorage.getItem('tasks')
-		? (JSON.parse(localStorage.getItem('tasks') as string) as IDataTasks[])
-		: []
+
+	const parseDataTaskLS = () => {
+		const dataTaskLS = localStorage.getItem('tasks')
+			? (JSON.parse(localStorage.getItem('tasks') as string) as IDataTasks[])
+			: []
+
+		return dataTaskLS
+	}
 
 	const handleClickShowFieldAndSelectTask = () => {
 		setIsNewTask(true)
@@ -28,8 +33,13 @@ export const useCardTask = (
 		setFieldValue('')
 	}
 
-	const handleDeleteTask = (data: IDataTasks) => {
-		const deleteDataTasks = dataTaskLS.filter(
+	const handleDeleteTask = (
+		e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+		data: IDataTasks
+	) => {
+		e.preventDefault()
+
+		const deleteDataTasks = parseDataTaskLS().filter(
 			deleteData => deleteData.id !== data.id && deleteData.title !== data.title
 		)
 
@@ -62,7 +72,7 @@ export const useCardTask = (
 
 		if (variant === 'backlog') {
 			setDataTasks([
-				...dataTaskLS,
+				...parseDataTaskLS(),
 				{
 					block: variant,
 					id,
@@ -73,7 +83,7 @@ export const useCardTask = (
 		} else {
 			const selectedTask = dataTasks.filter(
 				data =>
-					data.title === formData.get('title') &&
+					data.title === (formData.get('title') as string).trim() &&
 					((data.block === 'backlog' && variant === 'ready') ||
 						(data.block === 'ready' && variant === 'progress') ||
 						(data.block === 'progress' && variant === 'finished'))

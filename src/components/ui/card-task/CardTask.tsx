@@ -1,14 +1,15 @@
 import { Fragment, FunctionComponent } from 'react'
 import { IoMdClose } from 'react-icons/io'
 import { motion } from 'framer-motion'
+import { Link } from 'react-router-dom'
 
 import { IDataTasks } from '@/components/screens/home/Home'
 
+import { animationCardTask } from './animationCardTask'
 import CardTaskForm from './form/CardTaskForm'
 import { useCardTask } from './useCardTask'
 import styles from './CardTask.module.scss'
 import Button from '../button/Button'
-import { animationCardTask } from './animationCardTask'
 
 interface ICardTaskProps {
 	dataTasks: IDataTasks[]
@@ -49,12 +50,14 @@ const CardTask: FunctionComponent<ICardTaskProps> = ({
 					{dataTasks.map(data => (
 						<Fragment key={data.id}>
 							{data.block === variant && (
-								<motion.div variants={animationCardTask.item}>
-									{data.title}
-									<button onClick={() => handleDeleteTask(data)}>
-										<IoMdClose />
-									</button>
-								</motion.div>
+								<Link to={`/tasks/${data.id}`}>
+									<motion.div variants={animationCardTask.item}>
+										{data.title}
+										<button onClick={e => handleDeleteTask(e, data)}>
+											<IoMdClose />
+										</button>
+									</motion.div>
+								</Link>
 							)}
 						</Fragment>
 					))}

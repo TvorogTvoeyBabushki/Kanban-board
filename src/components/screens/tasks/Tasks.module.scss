@@ -1,0 +1,40 @@
+@import '/src/assets/styles/variables';
+@import '/src/assets/styles/mixins';
+
+.task_wrapper {
+	margin: 20px 0;
+	padding: 20px 30px;
+	background-color: $white;
+	border-radius: 5px;
+
+	> div {
+		display: flex;
+		flex-direction: column;
+		height: 548px;
+		overflow: auto;
+
+		> div {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			margin-bottom: 35px;
+
+			> h2 {
+				font-size: 24px;
+			}
+
+			> button {
+				@include transition(opacity);
+
+				padding: 4px;
+				height: 40px;
+
+				font-size: 2rem;
+
+				&:hover {
+					opacity: 0.7;
+				}
+			}
+		}
+	}
+}

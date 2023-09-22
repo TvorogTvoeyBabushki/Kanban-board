@@ -1,9 +1,23 @@
 import { FunctionComponent } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
 
 import styles from './Logo.module.scss'
 
 const Logo: FunctionComponent = () => {
-	return <h1 className={styles.logo}>Awesome Kanban Board</h1>
+	const navigate = useNavigate()
+	const { pathname } = useLocation()
+
+	const handleLinkHomeClick = () => {
+		if (pathname !== '/') {
+			navigate('/')
+		}
+	}
+
+	return (
+		<h1 onClick={handleLinkHomeClick} className={styles.logo}>
+			Awesome Kanban Board
+		</h1>
+	)
 }
 
 export default Logo
