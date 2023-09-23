@@ -26,7 +26,7 @@ const CardTask: FunctionComponent<ICardTaskProps> = ({
 }) => {
 	const {
 		fieldValue,
-		isNewTask,
+		isShowForm,
 		handle: {
 			handleCancelClick,
 			handleChangeInput,
@@ -66,7 +66,7 @@ const CardTask: FunctionComponent<ICardTaskProps> = ({
 				''
 			)}
 
-			{isNewTask && (
+			{isShowForm && (
 				<CardTaskForm
 					dataTasks={dataTasks}
 					variant={variant}
@@ -78,7 +78,7 @@ const CardTask: FunctionComponent<ICardTaskProps> = ({
 				/>
 			)}
 
-			{!isNewTask && (
+			{!isShowForm && (
 				<Button
 					children='Add card'
 					disabled={

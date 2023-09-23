@@ -20,3 +20,32 @@ body {
 	margin: 0 auto;
 	padding: 0 16px 0 19px;
 }
+
+.select {
+	&__control {
+		width: 100%;
+		cursor: pointer !important;
+		border-radius: 0.5rem !important;
+		border: none !important;
+
+		&--is-focused {
+			box-shadow: 0 0 transparent !important;
+		}
+	}
+
+	&__menu {
+		visibility: visible !important;
+		border-radius: 0.5rem !important;
+		position: relative !important;
+		z-index: 1000;
+
+		&-list {
+			padding: 0 !important;
+			border-radius: 0.5rem !important;
+		}
+	}
+
+	&:invalid {
+		color: $validation !important;
+	}
+}

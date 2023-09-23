@@ -8,8 +8,8 @@ export const useCardTask = (
 	setDataTasks: React.Dispatch<React.SetStateAction<IDataTasks[]>>
 ) => {
 	const [fieldValue, setFieldValue] = useState<string>('')
-	const [isNewTask, setIsNewTask] = useState<boolean>(false)
-	const [isSubmitForm, setIsSubmitForm] = useState<boolean>(false)
+	const [isShowForm, setIsShowForm] = useState<boolean>(false)
+	const [isInteractionTask, setIsInteractionTask] = useState<boolean>(false)
 	const [isDuplicateTask, setISDuplicateTask] = useState<boolean>(false)
 
 	const parseDataTaskLS = () => {
@@ -21,7 +21,7 @@ export const useCardTask = (
 	}
 
 	const handleClickShowFieldAndSelectTask = () => {
-		setIsNewTask(true)
+		setIsShowForm(true)
 	}
 
 	const handleCancelClick = (
@@ -29,7 +29,7 @@ export const useCardTask = (
 	) => {
 		e.stopPropagation()
 
-		setIsNewTask(false)
+		setIsShowForm(false)
 		setFieldValue('')
 	}
 
@@ -44,7 +44,7 @@ export const useCardTask = (
 		)
 
 		setDataTasks(deleteDataTasks)
-		setIsSubmitForm(true)
+		setIsInteractionTask(true)
 	}
 
 	const handleChangeInput = (e: React.FormEvent<HTMLInputElement>) => {
@@ -81,7 +81,7 @@ export const useCardTask = (
 				}
 			])
 		} else {
-			const selectedTask = dataTasks.filter(
+			const selectedTask = parseDataTaskLS().filter(
 				data =>
 					data.title === (formData.get('title') as string).trim() &&
 					((data.block === 'backlog' && variant === 'ready') ||
@@ -90,22 +90,23 @@ export const useCardTask = (
 			)
 
 			selectedTask.forEach(data => (data.block = variant))
-			setDataTasks(prev => [
-				...prev.filter(data => data.id !== selectedTask[0].id),
+			setDataTasks([
+				...parseDataTaskLS().filter(data => data.id !== selectedTask[0].id),
 				selectedTask[0]
 			])
 		}
 
-		setIsNewTask(false)
+		setIsShowForm(false)
 		setFieldValue('')
-		setIsSubmitForm(true)
+		setIsInteractionTask(true)
 	}
 
 	useEffect(() => {
-		isSubmitForm && localStorage.setItem('tasks', JSON.stringify(dataTasks))
+		isInteractionTask &&
+			localStorage.setItem('tasks', JSON.stringify(dataTasks))
 
-		return () => setIsSubmitForm(false)
-	}, [isSubmitForm])
+		return () => setIsInteractionTask(false)
+	}, [isInteractionTask])
 
 	useEffect(() => {
 		setISDuplicateTask(false)
@@ -114,7 +115,7 @@ export const useCardTask = (
 	return useMemo(
 		() => ({
 			fieldValue,
-			isNewTask,
+			isShowForm,
 			handle: {
 				handleClickShowFieldAndSelectTask,
 				handleCancelClick,
@@ -124,6 +125,6 @@ export const useCardTask = (
 			},
 			isDuplicateTask
 		}),
-		[fieldValue, isNewTask, isDuplicateTask]
+		[fieldValue, isShowForm, isDuplicateTask]
 	)
 }
