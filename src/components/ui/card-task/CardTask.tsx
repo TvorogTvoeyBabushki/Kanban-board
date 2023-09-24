@@ -80,6 +80,7 @@ const CardTask: FunctionComponent<ICardTaskProps> = ({
 
 			{!isShowForm && (
 				<Button
+					variant='add-card'
 					children='Add card'
 					disabled={
 						variant === 'backlog' ||

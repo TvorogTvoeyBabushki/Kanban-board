@@ -18,10 +18,10 @@ const Button: FunctionComponent<IButton> = ({
 			onClick={onClick}
 			disabled={disabled}
 			className={clsx(styles.btn, {
-				[styles.submit]: variant === 'submit' || variant === 'cancel'
+				[styles.submit]: variant !== 'add-card'
 			})}
 		>
-			{variant !== 'cancel' && <span>+</span>}
+			{variant === 'add-card' && <span>+</span>}
 			{children}
 		</button>
 	)

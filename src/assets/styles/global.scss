@@ -21,6 +21,11 @@ body {
 	padding: 0 16px 0 19px;
 }
 
+.validation {
+	margin-bottom: 15px;
+	color: $validation;
+}
+
 .select {
 	&__control {
 		width: 100%;

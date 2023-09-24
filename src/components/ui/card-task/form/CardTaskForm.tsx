@@ -56,14 +56,12 @@ const CardTaskForm: FunctionComponent<ICardTaskFormProps> = ({
 
 			<div>
 				{isDuplicateTask && (
-					<div className={styles.validation}>
-						The task is already on the list
-					</div>
+					<div className='validation'>The task is already on the list</div>
 				)}
 				<Button
 					children={fieldValue.length || selectValue ? 'Submit' : 'Add card'}
 					disabled={fieldValue.length || variant !== 'backlog' ? false : true}
-					variant='submit'
+					variant={fieldValue.length || selectValue ? 'submit' : 'add-card'}
 				/>
 				<Button
 					children='Cancel'
