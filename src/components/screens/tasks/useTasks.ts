@@ -45,7 +45,7 @@ export const useTasks = () => {
 	}
 
 	const handleChangeTextArea = (e: FormEvent<HTMLTextAreaElement>) => {
-		setValueTextarea((e.target as HTMLAreaElement).value)
+		setValueTextarea((e.target as HTMLTextAreaElement).value)
 	}
 
 	const handleSubmitForm = (e: FormEvent<HTMLFormElement>, variant: string) => {

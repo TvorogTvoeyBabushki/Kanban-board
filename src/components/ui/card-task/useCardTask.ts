@@ -1,6 +1,8 @@
-import { useMemo, useState, useEffect } from 'react'
+import { useMemo, useState, useEffect, useContext } from 'react'
 
 import { IDataTasks } from '@/components/screens/home/Home'
+
+import { ITaskContext, TaskContext } from '@/providers/TaskProvider'
 
 export const useCardTask = (
 	dataTasks: IDataTasks[],
@@ -11,6 +13,9 @@ export const useCardTask = (
 	const [isShowForm, setIsShowForm] = useState<boolean>(false)
 	const [isInteractionTask, setIsInteractionTask] = useState<boolean>(false)
 	const [isDuplicateTask, setISDuplicateTask] = useState<boolean>(false)
+	const { setIsInteractionPostDataPost } = useContext(
+		TaskContext
+	) as ITaskContext
 
 	const parseDataTaskLS = () => {
 		const dataTaskLS = localStorage.getItem('tasks')
@@ -102,10 +107,15 @@ export const useCardTask = (
 	}
 
 	useEffect(() => {
-		isInteractionTask &&
+		if (isInteractionTask) {
 			localStorage.setItem('tasks', JSON.stringify(dataTasks))
+			setIsInteractionPostDataPost(true)
+		}
 
-		return () => setIsInteractionTask(false)
+		return () => {
+			setIsInteractionTask(false)
+			setIsInteractionPostDataPost(false)
+		}
 	}, [isInteractionTask])
 
 	useEffect(() => {

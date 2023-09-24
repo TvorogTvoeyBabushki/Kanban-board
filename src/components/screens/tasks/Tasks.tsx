@@ -9,7 +9,6 @@ import NotFound from '../not-found/NotFound'
 
 const Tasks: FunctionComponent = () => {
 	const { isNotFoundTaskId, ...rest } = useTasks()
-	// сделать возможность изменения title и description
 	// добавить footer
 	// адаптив
 	// тесты
