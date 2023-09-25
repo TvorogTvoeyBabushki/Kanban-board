@@ -11,7 +11,7 @@ body {
 	font: 400 normal 1.125rem/1.2 $default-font;
 	color: $black;
 	background-color: $main-block;
-	overflow: hidden;
+	overflow-x: hidden;
 }
 
 .container {
@@ -22,6 +22,7 @@ body {
 }
 
 .validation {
+	width: 100%;
 	margin-bottom: 15px;
 	color: $validation;
 }

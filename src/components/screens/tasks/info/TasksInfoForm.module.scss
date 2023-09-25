@@ -1,9 +1,13 @@
 @import '/src/assets/styles/variables';
+@import '/src/assets/styles/mixins';
 
 .tasks_info_form {
+	@include transition(width);
 	width: 60%;
 
 	> input {
+		@include transition(width);
+
 		width: 100%;
 		padding: 0 5px 5px;
 		border-bottom: 1px solid $task-block;
@@ -25,5 +29,13 @@
 		border: 1px solid $task-block;
 		border-radius: 5px;
 		line-height: 1.4;
+	}
+
+	@media (max-width: 600px) {
+		width: 100%;
+
+		> input {
+			width: 90%;
+		}
 	}
 }

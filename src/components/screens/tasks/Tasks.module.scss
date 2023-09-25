@@ -2,12 +2,16 @@
 @import '/src/assets/styles/mixins';
 
 .task_wrapper {
+	@include transition(padding);
+
 	margin: 20px 0;
 	padding: 20px 30px;
 	background-color: $white;
 	border-radius: 5px;
 
 	> div {
+		@include transition(height);
+
 		display: flex;
 		flex-direction: column;
 		height: 548px;
@@ -20,6 +24,8 @@
 			margin-bottom: 35px;
 
 			> h2 {
+				@include transition(width);
+
 				width: 60%;
 				cursor: pointer;
 				font-size: 1.5rem;
@@ -34,10 +40,30 @@
 		}
 
 		> p {
+			@include transition(width);
+
 			width: 60%;
 			cursor: pointer;
 			white-space: break-spaces;
 			line-height: 1.4;
+		}
+	}
+
+	@media (max-width: 600px) {
+		padding: 10px;
+
+		> div {
+			height: 400px;
+
+			> div {
+				> h2 {
+					width: 90%;
+				}
+			}
+
+			> p {
+				width: 100%;
+			}
 		}
 	}
 }
