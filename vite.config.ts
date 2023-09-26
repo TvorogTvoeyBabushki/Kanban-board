@@ -5,7 +5,7 @@ import { resolve } from 'path'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-	base: '/Kanban-board /',
+	base: '/Kanban-board/',
 	plugins: [react(), tsconfigPaths()],
 	resolve: {
 		alias: {
