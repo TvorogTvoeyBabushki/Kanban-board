@@ -37,7 +37,7 @@ export const useTasks = () => {
 
 	const handleShowFormChangeTitle = () => setIsChangeTitle(true)
 	const handleShowFormChangeDescription = () => setIsChangeDescription(true)
-	const handleHomePageReturnClick = () => navigate('/')
+	const handleHomePageReturnClick = () => navigate('/Kanban-board')
 
 	const handleChangeField = (e: FormEvent<HTMLInputElement>) => {
 		setValueField((e.target as HTMLInputElement).value)

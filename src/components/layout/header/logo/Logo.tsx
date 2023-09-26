@@ -8,8 +8,8 @@ const Logo: FunctionComponent = () => {
 	const { pathname } = useLocation()
 
 	const handleLinkHomeClick = () => {
-		if (pathname !== '/') {
-			navigate('/')
+		if (pathname !== '/Kanban-board') {
+			navigate('/Kanban-board')
 		}
 	}
 

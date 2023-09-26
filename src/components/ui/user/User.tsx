@@ -10,7 +10,7 @@ const User: FunctionComponent = () => {
 
 	return (
 		<div className={styles.user}>
-			<img src='/public/user-avatar.svg' alt='user-img' />
+			<img src='/Kanban-board/user-avatar.svg' alt='user-img' />
 
 			<button
 				className={clsx('', {
@@ -19,7 +19,7 @@ const User: FunctionComponent = () => {
 				})}
 				onClick={handleArrowClick}
 			>
-				<img ref={imgRef} src='/public/arrow.svg' alt='arrow' />
+				<img ref={imgRef} src='/Kanban-board/arrow.svg' alt='arrow' />
 			</button>
 
 			{isShowList && (

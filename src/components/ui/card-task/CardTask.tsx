@@ -50,7 +50,7 @@ const CardTask: FunctionComponent<ICardTaskProps> = ({
 					{dataTasks.map(data => (
 						<Fragment key={data.id}>
 							{data.block === variant && (
-								<Link to={`/tasks/${data.id}`}>
+								<Link to={`/Kanban-board/tasks/${data.id}`}>
 									<motion.div variants={animationCardTask.item}>
 										{data.title}
 										<button onClick={e => handleDeleteTask(e, data)}>
